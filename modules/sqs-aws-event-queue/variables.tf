@@ -10,7 +10,7 @@ variable "source_arn" {
 
 variable "consumer_accounts" {
   description = "A List of the the AWS account ARN or a shortened form with the account ID."
-  type        = list
+  type        = list(any)
   default     = []
 }
 

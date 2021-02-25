@@ -25,7 +25,7 @@ This module creates following resources.
 |------|-------------|------|---------|:--------:|
 | name | This is the human-readable name of the queue. | `string` | n/a | yes |
 | source\_arn | The ARN of the source for the SQS queue. | `string` | n/a | yes |
-| consumer\_accounts | A List of the the AWS account ARN or a shortened form with the account ID. | `list` | `[]` | no |
+| consumer\_accounts | A List of the the AWS account ARN or a shortened form with the account ID. | `list(any)` | `[]` | no |
 | delay\_seconds | The time in seconds that the delivery of all messages in the queue will be delayed. An integer from 0 to 900 (15 minutes). | `number` | `0` | no |
 | max\_message\_size | The limit of how many bytes a message can contain before Amazon SQS rejects it. An integer from 1024 bytes (1 KiB) up to 262144 bytes (256 KiB). | `number` | `262144` | no |
 | message\_retention\_seconds | The number of seconds Amazon SQS retains a message. Integer representing seconds, from 60 (1 minute) to 1209600 (14 days). | `number` | `345600` | no |

@@ -7,38 +7,38 @@ locals {
   ## CloudFront
   cloudfront_canonical_user_id = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
   cloudfront_bucket_prefixes = [
-    for prefix in var.cloudfront_bucket_prefixes:
-      trim(prefix, "/")
+    for prefix in var.cloudfront_bucket_prefixes :
+    trim(prefix, "/")
   ]
-  cloudfront_resources =  [
-    for prefix in local.cloudfront_bucket_prefixes:
-      prefix != ""
-        ? format("%s/%s/*", aws_s3_bucket.this.arn, prefix)
-        : format("%s/*", aws_s3_bucket.this.arn)
+  cloudfront_resources = [
+    for prefix in local.cloudfront_bucket_prefixes :
+    prefix != ""
+    ? format("%s/%s/*", aws_s3_bucket.this.arn, prefix)
+    : format("%s/*", aws_s3_bucket.this.arn)
   ]
 
   ## CloudTrail
   cloudtrail_bucket_prefixes = [
-    for prefix in var.cloudtrail_bucket_prefixes:
-      trim(prefix, "/")
+    for prefix in var.cloudtrail_bucket_prefixes :
+    trim(prefix, "/")
   ]
-  cloudtrail_resources =  [
-    for prefix in local.cloudtrail_bucket_prefixes:
-      prefix != ""
-        ? format("%s/%s/*", aws_s3_bucket.this.arn, prefix)
-        : format("%s/*", aws_s3_bucket.this.arn)
+  cloudtrail_resources = [
+    for prefix in local.cloudtrail_bucket_prefixes :
+    prefix != ""
+    ? format("%s/%s/*", aws_s3_bucket.this.arn, prefix)
+    : format("%s/*", aws_s3_bucket.this.arn)
   ]
 
   ## ELB
   elb_bucket_prefixes = [
-    for prefix in var.elb_bucket_prefixes:
-      trim(prefix, "/")
+    for prefix in var.elb_bucket_prefixes :
+    trim(prefix, "/")
   ]
-  elb_resources =  [
-    for prefix in local.elb_bucket_prefixes:
-      prefix != ""
-        ? format("%s/%s/*", aws_s3_bucket.this.arn, prefix)
-        : format("%s/*", aws_s3_bucket.this.arn)
+  elb_resources = [
+    for prefix in local.elb_bucket_prefixes :
+    prefix != ""
+    ? format("%s/%s/*", aws_s3_bucket.this.arn, prefix)
+    : format("%s/*", aws_s3_bucket.this.arn)
   ]
 }
 
@@ -76,9 +76,9 @@ resource "aws_s3_bucket" "this" {
     for_each = length(local.grants) > 1 ? local.grants : []
 
     content {
-      type = lookup(grant.value, "type", "")
-      id = lookup(grant.value, "id", "")
-      uri = lookup(grant.value, "uri", "")
+      type        = lookup(grant.value, "type", "")
+      id          = lookup(grant.value, "id", "")
+      uri         = lookup(grant.value, "uri", "")
       permissions = lookup(grant.value, "permissions", [])
     }
   }
@@ -88,8 +88,8 @@ resource "aws_s3_bucket" "this" {
     enabled = true
 
     expiration {
-      date = var.default_expiration_enabled ? var.default_expiration_date : null
-      days = var.default_expiration_enabled ? var.default_expiration_days : 0
+      date                         = var.default_expiration_enabled ? var.default_expiration_date : null
+      days                         = var.default_expiration_enabled ? var.default_expiration_days : 0
       expired_object_delete_marker = false
     }
   }
@@ -103,8 +103,8 @@ resource "aws_s3_bucket" "this" {
       enabled = true
 
       expiration {
-        date = var.cloudfront_expiration_enabled ? var.cloudfront_expiration_date : null
-        days = var.cloudfront_expiration_enabled ? var.cloudfront_expiration_days : 0
+        date                         = var.cloudfront_expiration_enabled ? var.cloudfront_expiration_date : null
+        days                         = var.cloudfront_expiration_enabled ? var.cloudfront_expiration_days : 0
         expired_object_delete_marker = false
       }
     }
@@ -119,8 +119,8 @@ resource "aws_s3_bucket" "this" {
       enabled = true
 
       expiration {
-        date = var.cloudtrail_expiration_enabled ? var.cloudtrail_expiration_date : null
-        days = var.cloudtrail_expiration_enabled ? var.cloudtrail_expiration_days : 0
+        date                         = var.cloudtrail_expiration_enabled ? var.cloudtrail_expiration_date : null
+        days                         = var.cloudtrail_expiration_enabled ? var.cloudtrail_expiration_days : 0
         expired_object_delete_marker = false
       }
     }
@@ -135,8 +135,8 @@ resource "aws_s3_bucket" "this" {
       enabled = true
 
       expiration {
-        date = var.elb_expiration_enabled ? var.elb_expiration_date : null
-        days = var.elb_expiration_enabled ? var.elb_expiration_days : 0
+        date                         = var.elb_expiration_enabled ? var.elb_expiration_date : null
+        days                         = var.elb_expiration_enabled ? var.elb_expiration_days : 0
         expired_object_delete_marker = false
       }
     }
@@ -262,7 +262,7 @@ data "aws_iam_policy_document" "this" {
         type        = "AWS"
         identifiers = ["*"]
       }
-      actions   = ["s3:*"]
+      actions = ["s3:*"]
       resources = [
         aws_s3_bucket.this.arn,
         "${aws_s3_bucket.this.arn}/*"
@@ -288,11 +288,6 @@ resource "aws_s3_bucket_policy" "this" {
 
 resource "aws_s3_bucket_public_access_block" "this" {
   count = var.public_access_block_enabled ? 1 : 0
-  # To avoid OperationAborted: A conflicting conditional operation is currently in progress
-  depends_on = [
-    aws_s3_bucket.this,
-    aws_s3_bucket_policy.this,
-  ]
 
   bucket = aws_s3_bucket.this.id
 
@@ -304,4 +299,10 @@ resource "aws_s3_bucket_public_access_block" "this" {
   block_public_policy = true
   # Retroactivley block public and cross-account access if bucket has public policies
   restrict_public_buckets = true
+
+  # To avoid OperationAborted: A conflicting conditional operation is currently in progress
+  depends_on = [
+    aws_s3_bucket.this,
+    aws_s3_bucket_policy.this,
+  ]
 }

@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "this" {
         type        = "AWS"
         identifiers = var.consumer_accounts
       }
-      actions   = [
+      actions = [
         "sqs:ChangeMessageVisibility",
         "sqs:DeleteMessage",
         "sqs:PurgeQueue",
