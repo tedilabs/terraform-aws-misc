@@ -12,13 +12,13 @@ This module creates following resources.
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13 |
-| aws | >= 3.30 |
+| aws | >= 3.34 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.30 |
+| aws | >= 3.34 |
 
 ## Inputs
 
@@ -64,7 +64,5 @@ This module creates following resources.
 | policy | The text of the policy. |
 | region | The AWS region this bucket resides in. |
 | regional\_domain\_name | The bucket region-specific domain name. The bucket domain name including the region name. |
-| resource\_group\_enabled | Whether Resource Group is enabled. |
-| resource\_group\_name | The name of Resource Group. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

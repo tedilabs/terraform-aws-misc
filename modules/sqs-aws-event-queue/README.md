@@ -11,13 +11,13 @@ This module creates following resources.
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13 |
-| aws | >= 3.30 |
+| aws | >= 3.34 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.30 |
+| aws | >= 3.34 |
 
 ## Inputs
 
@@ -44,7 +44,5 @@ This module creates following resources.
 | arn | The ARN of the SQS queue. |
 | id | The URL for the created Amazon SQS queue. |
 | name | The name of the SQS queue. |
-| resource\_group\_enabled | Whether Resource Group is enabled. |
-| resource\_group\_name | The name of Resource Group. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
