@@ -92,10 +92,10 @@ resource "aws_s3_bucket" "this" {
     for_each = length(local.grants) > 1 ? local.grants : []
 
     content {
-      type        = lookup(grant.value, "type", "")
-      id          = lookup(grant.value, "id", "")
-      uri         = lookup(grant.value, "uri", "")
-      permissions = lookup(grant.value, "permissions", [])
+      type        = try(grant.value.type, null)
+      id          = try(grant.value.id, null)
+      uri         = try(grant.value.uri, null)
+      permissions = try(grant.value.permissions, [])
     }
   }
 
