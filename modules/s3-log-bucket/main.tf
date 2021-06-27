@@ -1,6 +1,6 @@
 locals {
   metadata = {
-    package = "terraform-aws-observability"
+    package = "terraform-aws-misc"
     version = trimspace(file("${path.module}/../../VERSION"))
     module  = basename(path.module)
     name    = var.name
