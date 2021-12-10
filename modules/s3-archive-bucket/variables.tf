@@ -42,7 +42,7 @@ variable "object_ownership" {
 variable "public_access_block_enabled" {
   description = "Enable S3 bucket-level Public Access Block configuration."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "tls_required" {
