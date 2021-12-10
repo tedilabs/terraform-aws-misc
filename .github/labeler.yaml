@@ -5,8 +5,8 @@
 ":floppy_disk: msk-cluster":
 - modules/msk-cluster/**/*
 
-":floppy_disk: s3-archive":
-- modules/s3-archive/**/*
+":floppy_disk: s3-archive-bucket":
+- modules/s3-archive-bucket/**/*
 
 ":floppy_disk: sqs-aws-event-queue":
 - modules/sqs-aws-event-queue/**/*
