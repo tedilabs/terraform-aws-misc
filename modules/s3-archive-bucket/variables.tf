@@ -95,7 +95,7 @@ variable "delivery_elb_key_prefixes" {
 
 variable "lifecycle_rules" {
   description = "Use lifecycle rules to define actions you want Amazon S3 to take during an object's lifetime such as transitioning objects to another storage class, archiving them, or deleting them after a specified period of time."
-  type        = list(map(any))
+  type        = list(any)
   default     = []
 }
 
