@@ -25,6 +25,10 @@ resource "aws_msk_configuration" "this" {
   kafka_versions = [var.kafka_version]
 
   server_properties = var.kafka_config
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_msk_cluster" "this" {
