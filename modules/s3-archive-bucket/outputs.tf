@@ -62,14 +62,18 @@ output "request_payment" {
   }
 }
 
-output "object_ownership" {
-  description = "The ownership of objects written to the bucket from other AWS accounts and granted using access control lists(ACLs)."
-  value       = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership
-}
-
-output "public_access_enabled" {
-  description = "Whether S3 bucket-level Public Access Block is disabled."
-  value       = var.public_access_enabled
+output "access_control" {
+  description = "The configuration for the S3 bucket access control."
+  value = {
+    object_ownership = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership
+    acl = {
+      enabled = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership != "BucketOwnerEnforced"
+      grants  = local.grants
+    }
+    public_access = {
+      enabled = var.public_access_enabled
+    }
+  }
 }
 
 output "logging" {

@@ -37,6 +37,7 @@ No modules.
 | [aws_resourcegroups_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/resourcegroups_group) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_accelerate_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_accelerate_configuration) | resource |
+| [aws_s3_bucket_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_logging.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
@@ -87,14 +88,13 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_access_control"></a> [access\_control](#output\_access\_control) | The configuration for the S3 bucket access control. |
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the bucket. |
 | <a name="output_domain_name"></a> [domain\_name](#output\_domain\_name) | The bucket domain name. Will be of format `bucketname.s3.amazonaws.com`. |
 | <a name="output_hosted_zone_id"></a> [hosted\_zone\_id](#output\_hosted\_zone\_id) | The Route 53 Hosted Zone ID for this bucket's region. |
 | <a name="output_id"></a> [id](#output\_id) | The ID of the bucket. |
 | <a name="output_logging"></a> [logging](#output\_logging) | The logging configuration for the bucket. |
 | <a name="output_name"></a> [name](#output\_name) | The name of the bucket. |
-| <a name="output_object_ownership"></a> [object\_ownership](#output\_object\_ownership) | The ownership of objects written to the bucket from other AWS accounts and granted using access control lists(ACLs). |
-| <a name="output_public_access_enabled"></a> [public\_access\_enabled](#output\_public\_access\_enabled) | Whether S3 bucket-level Public Access Block is disabled. |
 | <a name="output_region"></a> [region](#output\_region) | The AWS region this bucket resides in. |
 | <a name="output_regional_domain_name"></a> [regional\_domain\_name](#output\_regional\_domain\_name) | The bucket region-specific domain name. The bucket domain name including the region name. |
 | <a name="output_request_payment"></a> [request\_payment](#output\_request\_payment) | The configuration for the S3 bucket request payment. |

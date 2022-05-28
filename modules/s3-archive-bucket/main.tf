@@ -14,32 +14,6 @@ locals {
   } : {}
 }
 
-data "aws_caller_identity" "this" {}
-data "aws_canonical_user_id" "this" {}
-
-locals {
-  cloudfront_canonical_user_id = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
-
-  default_grants = [
-    {
-      type        = "CanonicalUser"
-      id          = data.aws_canonical_user_id.this.id
-      permissions = ["FULL_CONTROL"]
-    }
-  ]
-  cloudfront_grant = {
-    type        = "CanonicalUser"
-    id          = local.cloudfront_canonical_user_id
-    permissions = ["FULL_CONTROL"]
-  }
-
-  grants = concat(
-    local.default_grants,
-    var.delivery_cloudfront_enabled ? [local.cloudfront_grant] : [],
-    var.grants
-  )
-}
-
 
 ###################################################
 # S3 Bucket for archive
@@ -49,17 +23,6 @@ locals {
 resource "aws_s3_bucket" "this" {
   bucket        = var.name
   force_destroy = var.force_destroy
-
-  dynamic "grant" {
-    for_each = length(local.grants) > 1 ? local.grants : []
-
-    content {
-      type        = try(grant.value.type, null)
-      id          = try(grant.value.id, null)
-      uri         = try(grant.value.uri, null)
-      permissions = try(grant.value.permissions, [])
-    }
-  }
 
   dynamic "lifecycle_rule" {
     for_each = var.lifecycle_rules
