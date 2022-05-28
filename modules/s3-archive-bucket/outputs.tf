@@ -52,9 +52,9 @@ output "object_ownership" {
   value       = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership
 }
 
-output "public_access_block_enabled" {
-  description = "Whether S3 bucket-level Public Access Block is enabled."
-  value       = var.public_access_block_enabled
+output "public_access_enabled" {
+  description = "Whether S3 bucket-level Public Access Block is disabled."
+  value       = var.public_access_enabled
 }
 
 output "logging" {
