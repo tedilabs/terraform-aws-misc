@@ -106,15 +106,6 @@ resource "aws_s3_bucket" "this" {
     }
   }
 
-  dynamic "logging" {
-    for_each = var.logging_s3_bucket != null ? ["go"] : []
-
-    content {
-      target_bucket = var.logging_s3_bucket
-      target_prefix = try(var.logging_s3_key_prefix, null)
-    }
-  }
-
   tags = merge(
     {
       "Name" = local.metadata.name

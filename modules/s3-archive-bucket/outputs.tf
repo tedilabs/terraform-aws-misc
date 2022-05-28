@@ -73,8 +73,9 @@ output "public_access_enabled" {
 }
 
 output "logging" {
-  description = "The logging configuration for access to the bucket."
+  description = "The logging configuration for the bucket."
   value = {
+    enabled = var.logging_enabled
     s3 = {
       bucket     = var.logging_s3_bucket
       key_prefix = var.logging_s3_key_prefix

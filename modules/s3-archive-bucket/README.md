@@ -4,12 +4,13 @@ This module creates following resources.
 
 - `aws_s3_bucket`
 - `aws_s3_bucket_accelerate_configuration`
-- `aws_s3_bucket_versioning`
+- `aws_s3_bucket_logging` (optional)
 - `aws_s3_bucket_ownership_controls`
 - `aws_s3_bucket_policy`
 - `aws_s3_bucket_public_access_block`
 - `aws_s3_bucket_request_payment_configuration`
 - `aws_s3_bucket_server_side_encryption_configuration`
+- `aws_s3_bucket_versioning`
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -36,6 +37,7 @@ No modules.
 | [aws_resourcegroups_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/resourcegroups_group) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_accelerate_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_accelerate_configuration) | resource |
+| [aws_s3_bucket_logging.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
@@ -66,6 +68,7 @@ No modules.
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | (Optional) A bool that indicates all objects (including any locked objects) should be deleted from the bucket so the bucket can be destroyed without error. | `bool` | `false` | no |
 | <a name="input_grants"></a> [grants](#input\_grants) | (Optional) A list of the ACL policy grant. Conflicts with acl. Valid values for `grant.type` are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported. Valid values for `grant.permissions` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`. | `list(any)` | `[]` | no |
 | <a name="input_lifecycle_rules"></a> [lifecycle\_rules](#input\_lifecycle\_rules) | (Optional) Use lifecycle rules to define actions you want Amazon S3 to take during an object's lifetime such as transitioning objects to another storage class, archiving them, or deleting them after a specified period of time. | `list(any)` | `[]` | no |
+| <a name="input_logging_enabled"></a> [logging\_enabled](#input\_logging\_enabled) | (Optional) Whether to enable S3 bucket logging for the access log. Defaults to `false`. | `bool` | `false` | no |
 | <a name="input_logging_s3_bucket"></a> [logging\_s3\_bucket](#input\_logging\_s3\_bucket) | (Optional) The name of the bucket that will receive the log objects. | `string` | `null` | no |
 | <a name="input_logging_s3_key_prefix"></a> [logging\_s3\_key\_prefix](#input\_logging\_s3\_key\_prefix) | (Optional) To specify a key prefix of log objects. | `string` | `null` | no |
 | <a name="input_module_tags_enabled"></a> [module\_tags\_enabled](#input\_module\_tags\_enabled) | (Optional) Whether to create AWS Resource Tags for the module informations. | `bool` | `true` | no |
@@ -88,7 +91,7 @@ No modules.
 | <a name="output_domain_name"></a> [domain\_name](#output\_domain\_name) | The bucket domain name. Will be of format `bucketname.s3.amazonaws.com`. |
 | <a name="output_hosted_zone_id"></a> [hosted\_zone\_id](#output\_hosted\_zone\_id) | The Route 53 Hosted Zone ID for this bucket's region. |
 | <a name="output_id"></a> [id](#output\_id) | The ID of the bucket. |
-| <a name="output_logging"></a> [logging](#output\_logging) | The logging configuration for access to the bucket. |
+| <a name="output_logging"></a> [logging](#output\_logging) | The logging configuration for the bucket. |
 | <a name="output_name"></a> [name](#output\_name) | The name of the bucket. |
 | <a name="output_object_ownership"></a> [object\_ownership](#output\_object\_ownership) | The ownership of objects written to the bucket from other AWS accounts and granted using access control lists(ACLs). |
 | <a name="output_public_access_enabled"></a> [public\_access\_enabled](#output\_public\_access\_enabled) | Whether S3 bucket-level Public Access Block is disabled. |

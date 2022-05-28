@@ -116,6 +116,13 @@ variable "lifecycle_rules" {
   default     = []
 }
 
+variable "logging_enabled" {
+  description = "(Optional) Whether to enable S3 bucket logging for the access log. Defaults to `false`."
+  type        = bool
+  default     = false
+  nullable    = false
+}
+
 variable "logging_s3_bucket" {
   description = "(Optional) The name of the bucket that will receive the log objects."
   type        = string
