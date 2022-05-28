@@ -55,6 +55,13 @@ output "server_side_encryption" {
   }
 }
 
+output "request_payment" {
+  description = "The configuration for the S3 bucket request payment."
+  value = {
+    payer = aws_s3_bucket_request_payment_configuration.this.payer
+  }
+}
+
 output "object_ownership" {
   description = "The ownership of objects written to the bucket from other AWS accounts and granted using access control lists(ACLs)."
   value       = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership

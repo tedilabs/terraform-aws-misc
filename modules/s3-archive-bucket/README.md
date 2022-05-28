@@ -8,6 +8,7 @@ This module creates following resources.
 - `aws_s3_bucket_ownership_controls`
 - `aws_s3_bucket_policy`
 - `aws_s3_bucket_public_access_block`
+- `aws_s3_bucket_request_payment_configuration`
 - `aws_s3_bucket_server_side_encryption_configuration`
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -38,6 +39,7 @@ No modules.
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_request_payment_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_request_payment_configuration) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
@@ -92,6 +94,7 @@ No modules.
 | <a name="output_public_access_enabled"></a> [public\_access\_enabled](#output\_public\_access\_enabled) | Whether S3 bucket-level Public Access Block is disabled. |
 | <a name="output_region"></a> [region](#output\_region) | The AWS region this bucket resides in. |
 | <a name="output_regional_domain_name"></a> [regional\_domain\_name](#output\_regional\_domain\_name) | The bucket region-specific domain name. The bucket domain name including the region name. |
+| <a name="output_request_payment"></a> [request\_payment](#output\_request\_payment) | The configuration for the S3 bucket request payment. |
 | <a name="output_server_side_encryption"></a> [server\_side\_encryption](#output\_server\_side\_encryption) | The configuration for the S3 bucket server-side encryption. |
 | <a name="output_transfer_acceleration"></a> [transfer\_acceleration](#output\_transfer\_acceleration) | The configuration for the S3 Transfer Acceleration of the bucket. |
 | <a name="output_versioning"></a> [versioning](#output\_versioning) | The versioning configuration for the bucket. |
