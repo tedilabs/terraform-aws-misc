@@ -50,8 +50,6 @@ resource "aws_s3_bucket" "this" {
   bucket        = var.name
   force_destroy = var.force_destroy
 
-  acceleration_status = var.transfer_acceleration_enabled ? "Enabled" : "Suspended"
-
   dynamic "grant" {
     for_each = length(local.grants) > 1 ? local.grants : []
 

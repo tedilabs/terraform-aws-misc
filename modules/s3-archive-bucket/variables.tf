@@ -10,7 +10,7 @@ variable "force_destroy" {
 }
 
 variable "transfer_acceleration_enabled" {
-  description = "Use an accelerated endpoint for faster data transfers."
+  description = "Whether to use an accelerated endpoint for faster data transfers."
   type        = bool
   default     = false
 }

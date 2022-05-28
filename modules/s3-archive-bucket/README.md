@@ -3,6 +3,7 @@
 This module creates following resources.
 
 - `aws_s3_bucket`
+- `aws_s3_bucket_accelerate_configuration`
 - `aws_s3_bucket_versioning`
 - `aws_s3_bucket_policy`
 - `aws_s3_bucket_ownership_controls`
@@ -32,6 +33,7 @@ No modules.
 |------|------|
 | [aws_resourcegroups_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/resourcegroups_group) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_accelerate_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_accelerate_configuration) | resource |
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
@@ -70,7 +72,7 @@ No modules.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of Resource Group. A Resource Group name can have a maximum of 127 characters, including letters, numbers, hyphens, dots, and underscores. The name cannot start with `AWS` or `aws`. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources. | `map(string)` | `{}` | no |
 | <a name="input_tls_required"></a> [tls\_required](#input\_tls\_required) | Deny any access to the S3 bucket that is not encrypted in-transit if true. | `bool` | `true` | no |
-| <a name="input_transfer_acceleration_enabled"></a> [transfer\_acceleration\_enabled](#input\_transfer\_acceleration\_enabled) | Use an accelerated endpoint for faster data transfers. | `bool` | `false` | no |
+| <a name="input_transfer_acceleration_enabled"></a> [transfer\_acceleration\_enabled](#input\_transfer\_acceleration\_enabled) | Whether to use an accelerated endpoint for faster data transfers. | `bool` | `false` | no |
 | <a name="input_versioning_mfa_deletion"></a> [versioning\_mfa\_deletion](#input\_versioning\_mfa\_deletion) | (Optional) A configuration for MFA (Multi-factors Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.<br>    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.<br>    (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | <pre>object({<br>    enabled = bool<br>    device  = string<br>  })</pre> | <pre>{<br>  "device": null,<br>  "enabled": false<br>}</pre> | no |
 | <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | A desired status of the bucket versioning. Valid values are `ENABLED`, `SUSPENDED`, or `DISABLED`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"DISABLED"` | no |
 
@@ -88,6 +90,6 @@ No modules.
 | <a name="output_public_access_block_enabled"></a> [public\_access\_block\_enabled](#output\_public\_access\_block\_enabled) | Whether S3 bucket-level Public Access Block is enabled. |
 | <a name="output_region"></a> [region](#output\_region) | The AWS region this bucket resides in. |
 | <a name="output_regional_domain_name"></a> [regional\_domain\_name](#output\_regional\_domain\_name) | The bucket region-specific domain name. The bucket domain name including the region name. |
-| <a name="output_transfer_acceleration_enabled"></a> [transfer\_acceleration\_enabled](#output\_transfer\_acceleration\_enabled) | Whether S3 Transfer Acceleration is enabled. |
+| <a name="output_transfer_acceleration"></a> [transfer\_acceleration](#output\_transfer\_acceleration) | The configuration for the S3 Transfer Acceleration of the bucket. |
 | <a name="output_versioning"></a> [versioning](#output\_versioning) | The versioning configuration for the bucket. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -1,5 +1,5 @@
 locals {
-  mfa_status = {
+  versioning_mfa_status = {
     "ENABLED"   = "Enabled"
     "DISABLED"  = "Disabled"
     "SUSPENDED" = "Suspended"
@@ -13,12 +13,12 @@ locals {
 
 # TODO: `expected_bucket_owner`
 resource "aws_s3_bucket_versioning" "this" {
-  bucket = aws_s3_bucket.this.id
+  bucket = aws_s3_bucket.this.bucket
 
   mfa = try(var.versioning_mfa_deletion.device, null)
 
   versioning_configuration {
-    status     = local.mfa_status[var.versioning_status]
+    status     = local.versioning_mfa_status[var.versioning_status]
     mfa_delete = try(var.versioning_mfa_deletion.enabled, false) ? "Enabled" : "Disabled"
   }
 }

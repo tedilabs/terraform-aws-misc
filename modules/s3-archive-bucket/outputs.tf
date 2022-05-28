@@ -32,9 +32,11 @@ output "regional_domain_name" {
   value       = aws_s3_bucket.this.bucket_regional_domain_name
 }
 
-output "transfer_acceleration_enabled" {
-  description = "Whether S3 Transfer Acceleration is enabled."
-  value       = var.transfer_acceleration_enabled
+output "transfer_acceleration" {
+  description = "The configuration for the S3 Transfer Acceleration of the bucket."
+  value = {
+    enabled = var.transfer_acceleration_enabled
+  }
 }
 
 output "versioning" {
