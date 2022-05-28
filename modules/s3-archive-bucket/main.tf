@@ -167,16 +167,3 @@ resource "aws_s3_bucket_policy" "this" {
   bucket = aws_s3_bucket.this.id
   policy = data.aws_iam_policy_document.this.json
 }
-
-
-###################################################
-# Object Ownership for S3 Bucket
-###################################################
-
-resource "aws_s3_bucket_ownership_controls" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    object_ownership = var.object_ownership
-  }
-}

@@ -1,4 +1,17 @@
 ###################################################
+# Object Ownership for S3 Bucket
+###################################################
+
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.this.bucket
+
+  rule {
+    object_ownership = var.object_ownership
+  }
+}
+
+
+###################################################
 # Public Access Block for S3 Bucket
 ###################################################
 
