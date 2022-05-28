@@ -47,6 +47,14 @@ output "versioning" {
   }
 }
 
+output "server_side_encryption" {
+  description = "The configuration for the S3 bucket server-side encryption."
+  value = {
+    enabled   = true
+    algorithm = "AES256"
+  }
+}
+
 output "object_ownership" {
   description = "The ownership of objects written to the bucket from other AWS accounts and granted using access control lists(ACLs)."
   value       = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership

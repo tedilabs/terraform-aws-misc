@@ -115,14 +115,6 @@ resource "aws_s3_bucket" "this" {
     }
   }
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-
   tags = merge(
     {
       "Name" = local.metadata.name
@@ -130,6 +122,31 @@ resource "aws_s3_bucket" "this" {
     local.module_tags,
     var.tags,
   )
+}
+
+
+###################################################
+# Server Side Encryption for S3 Bucket
+###################################################
+
+locals {
+  sse_algorithm = {
+    "AES256"  = "AES256"
+    "AWS_KMS" = "aws:kms"
+  }
+}
+
+# TODO: `expected_bucket_owner`
+# TODO: `bucket_key_enabled`
+# TODO: `rule.apply_server_side_encryption_by_default.kms_master_key_id`
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket = aws_s3_bucket.this.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = local.sse_algorithm["AES256"]
+    }
+  }
 }
 
 
