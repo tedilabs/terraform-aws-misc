@@ -15,16 +15,33 @@ variable "transfer_acceleration_enabled" {
   default     = false
 }
 
-variable "versioning_enabled" {
-  description = "Enable versioning. Once you version-enable a bucket, it can never return to an unversioned state. You can, however, suspend versioning on that bucket."
-  type        = bool
-  default     = false
+variable "versioning_status" {
+  description = "A desired status of the bucket versioning. Valid values are `ENABLED`, `SUSPENDED`, or `DISABLED`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets."
+  type        = string
+  default     = "DISABLED"
+  nullable    = false
+
+  validation {
+    condition     = contains(["ENABLED", "SUSPENDED", "DISABLED"], var.versioning_status)
+    error_message = "Valid values for `versioning_status` are `ENABLED`, `SUSPENDED`, `DISABLED`."
+  }
 }
 
-variable "mfa_delete_enabled" {
-  description = "Enable MFA delete for either `Change the versioning state of your bucket` or `Permanently delete an object version`. Default is `false`."
-  type        = bool
-  default     = false
+variable "versioning_mfa_deletion" {
+  description = <<EOF
+  (Optional) A configuration for MFA (Multi-factors Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.
+    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.
+    (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device.
+  EOF
+  type = object({
+    enabled = bool
+    device  = string
+  })
+  default = {
+    enabled = false
+    device  = null
+  }
+  nullable = false
 }
 
 variable "grants" {

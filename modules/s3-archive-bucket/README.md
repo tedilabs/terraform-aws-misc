@@ -3,6 +3,7 @@
 This module creates following resources.
 
 - `aws_s3_bucket`
+- `aws_s3_bucket_versioning`
 - `aws_s3_bucket_policy`
 - `aws_s3_bucket_ownership_controls`
 - `aws_s3_bucket_public_access_block` (optional)
@@ -12,14 +13,14 @@ This module creates following resources.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.45 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.16 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.69.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.16.0 |
 
 ## Modules
 
@@ -34,6 +35,7 @@ No modules.
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_versioning.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [aws_caller_identity.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_canonical_user_id.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/canonical_user_id) | data source |
 | [aws_elb_service_account.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
@@ -60,7 +62,6 @@ No modules.
 | <a name="input_lifecycle_rules"></a> [lifecycle\_rules](#input\_lifecycle\_rules) | Use lifecycle rules to define actions you want Amazon S3 to take during an object's lifetime such as transitioning objects to another storage class, archiving them, or deleting them after a specified period of time. | `list(any)` | `[]` | no |
 | <a name="input_logging_s3_bucket"></a> [logging\_s3\_bucket](#input\_logging\_s3\_bucket) | The name of the bucket that will receive the log objects. | `string` | `null` | no |
 | <a name="input_logging_s3_key_prefix"></a> [logging\_s3\_key\_prefix](#input\_logging\_s3\_key\_prefix) | To specify a key prefix of log objects. | `string` | `null` | no |
-| <a name="input_mfa_delete_enabled"></a> [mfa\_delete\_enabled](#input\_mfa\_delete\_enabled) | Enable MFA delete for either `Change the versioning state of your bucket` or `Permanently delete an object version`. Default is `false`. | `bool` | `false` | no |
 | <a name="input_module_tags_enabled"></a> [module\_tags\_enabled](#input\_module\_tags\_enabled) | Whether to create AWS Resource Tags for the module informations. | `bool` | `true` | no |
 | <a name="input_object_ownership"></a> [object\_ownership](#input\_object\_ownership) | Control ownership of objects written to this bucket from other AWS accounts and granted using access control lists (ACLs). Object ownership determines who can specify access to objects. Valid values: `BucketOwnerPreferred` or `ObjectWriter`. | `string` | `"BucketOwnerPreferred"` | no |
 | <a name="input_public_access_block_enabled"></a> [public\_access\_block\_enabled](#input\_public\_access\_block\_enabled) | Enable S3 bucket-level Public Access Block configuration. | `bool` | `true` | no |
@@ -70,7 +71,8 @@ No modules.
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources. | `map(string)` | `{}` | no |
 | <a name="input_tls_required"></a> [tls\_required](#input\_tls\_required) | Deny any access to the S3 bucket that is not encrypted in-transit if true. | `bool` | `true` | no |
 | <a name="input_transfer_acceleration_enabled"></a> [transfer\_acceleration\_enabled](#input\_transfer\_acceleration\_enabled) | Use an accelerated endpoint for faster data transfers. | `bool` | `false` | no |
-| <a name="input_versioning_enabled"></a> [versioning\_enabled](#input\_versioning\_enabled) | Enable versioning. Once you version-enable a bucket, it can never return to an unversioned state. You can, however, suspend versioning on that bucket. | `bool` | `false` | no |
+| <a name="input_versioning_mfa_deletion"></a> [versioning\_mfa\_deletion](#input\_versioning\_mfa\_deletion) | (Optional) A configuration for MFA (Multi-factors Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.<br>    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.<br>    (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | <pre>object({<br>    enabled = bool<br>    device  = string<br>  })</pre> | <pre>{<br>  "device": null,<br>  "enabled": false<br>}</pre> | no |
+| <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | A desired status of the bucket versioning. Valid values are `ENABLED`, `SUSPENDED`, or `DISABLED`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"DISABLED"` | no |
 
 ## Outputs
 

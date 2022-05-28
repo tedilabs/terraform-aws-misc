@@ -40,8 +40,8 @@ output "transfer_acceleration_enabled" {
 output "versioning" {
   description = "The versioning configuration for the bucket."
   value = {
-    enabled            = var.versioning_enabled
-    mfa_delete_enabled = var.mfa_delete_enabled
+    status       = var.versioning_status
+    mfa_deletion = var.versioning_mfa_deletion
   }
 }
 

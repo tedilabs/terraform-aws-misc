@@ -52,11 +52,6 @@ resource "aws_s3_bucket" "this" {
 
   acceleration_status = var.transfer_acceleration_enabled ? "Enabled" : "Suspended"
 
-  versioning {
-    enabled    = var.versioning_enabled
-    mfa_delete = var.mfa_delete_enabled
-  }
-
   dynamic "grant" {
     for_each = length(local.grants) > 1 ? local.grants : []
 
