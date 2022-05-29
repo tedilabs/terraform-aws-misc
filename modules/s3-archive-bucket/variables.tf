@@ -7,12 +7,14 @@ variable "force_destroy" {
   description = "(Optional) A bool that indicates all objects (including any locked objects) should be deleted from the bucket so the bucket can be destroyed without error."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "transfer_acceleration_enabled" {
   description = "(Optional) Whether to use an accelerated endpoint for faster data transfers."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "versioning_status" {
@@ -45,75 +47,100 @@ variable "versioning_mfa_deletion" {
 }
 
 variable "grants" {
-  description = "(Optional) A list of the ACL policy grant. Conflicts with acl. Valid values for `grant.type` are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported. Valid values for `grant.permissions` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`."
+  description = "(Optional) A list of the ACL policy grant. Conflicts with acl. Valid values for `grant.type` are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported. Valid values for `grant.permission` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`."
   type        = list(any)
   default     = []
+  nullable    = false
+
+  validation {
+    condition = alltrue([
+      for grant in var.grants :
+      contains(["READ", "WRITE", "READ_ACP", "WRITE_ACP", "FULL_CONTROL"], grant.permission)
+    ])
+    error_message = "Valid values for `grant.permission` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`."
+  }
 }
 
 variable "object_ownership" {
-  description = "(Optional) Control ownership of objects written to this bucket from other AWS accounts and granted using access control lists (ACLs). Object ownership determines who can specify access to objects. Valid values: `BucketOwnerPreferred` or `ObjectWriter`."
+  description = "(Optional) Control ownership of objects written to this bucket from other AWS accounts and granted using access control lists (ACLs). Object ownership determines who can specify access to objects. Valid values: `BucketOwnerPreferred`, `BucketOwnerEnforced` or `ObjectWriter`."
   type        = string
   default     = "BucketOwnerPreferred"
+  nullable    = false
+
+  validation {
+    condition     = contains(["BucketOwnerPreferred", "BucketOwnerEnforced", "ObjectWriter"], var.object_ownership)
+    error_message = "Valid values for `object_ownership` are `BucketOwnerPreferred`, `BucketOwnerEnforced` or `ObjectWriter`."
+  }
 }
 
 variable "public_access_enabled" {
   description = "(Optional) Whether to enable S3 bucket-level Public Access Block configuration. Block the public access to S3 bucket if the value is `false`."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "tls_required" {
   description = "(Optional) Deny any access to the S3 bucket that is not encrypted in-transit if true."
   type        = bool
   default     = true
+  nullable    = false
 }
 
 variable "delivery_cloudfront_enabled" {
   description = "(Optional) Allow CloudFront service to export logs to bucket."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "delivery_cloudtrail_enabled" {
   description = "(Optional) Allow CloudTrail service to export logs to bucket."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "delivery_cloudtrail_key_prefixes" {
   description = "(Optional) List of the S3 key prefixes that follows the name of the bucket you have allowed for CloudTrail log file delivery."
   type        = list(string)
   default     = []
+  nullable    = false
 }
 
 variable "delivery_config_enabled" {
   description = "(Optional) Allow Config service to delivery to bucket."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "delivery_config_key_prefixes" {
   description = "(Optional) List of the S3 key prefixes that follows the name of the bucket you have allowed for Config."
   type        = list(string)
   default     = []
+  nullable    = false
 }
 
 variable "delivery_elb_enabled" {
   description = "(Optional) Allow ELB(Elastic Load Balancer) service to export logs to bucket."
   type        = bool
   default     = false
+  nullable    = false
 }
 
 variable "delivery_elb_key_prefixes" {
   description = "(Optional) List of the S3 key prefixes that follows the name of the bucket you have allowed for ELB(Elastic Load Balancer) log file delivery."
   type        = list(string)
   default     = []
+  nullable    = false
 }
 
 variable "lifecycle_rules" {
   description = "(Optional) Use lifecycle rules to define actions you want Amazon S3 to take during an object's lifetime such as transitioning objects to another storage class, archiving them, or deleting them after a specified period of time."
   type        = list(any)
   default     = []
+  nullable    = false
 }
 
 variable "logging_enabled" {

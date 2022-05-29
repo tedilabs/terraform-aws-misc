@@ -26,6 +26,25 @@ locals {
 
 
 ###################################################
+# Policy for S3 Bucket
+###################################################
+
+data "aws_iam_policy_document" "this" {
+  source_policy_documents = concat(
+    var.tls_required ? [data.aws_iam_policy_document.tls_required.json] : [],
+    var.delivery_cloudtrail_enabled ? [data.aws_iam_policy_document.cloudtrail.json] : [],
+    var.delivery_config_enabled ? [data.aws_iam_policy_document.config.json] : [],
+    var.delivery_elb_enabled ? [data.aws_iam_policy_document.elb.json] : [],
+  )
+}
+
+resource "aws_s3_bucket_policy" "this" {
+  bucket = aws_s3_bucket.this.id
+  policy = data.aws_iam_policy_document.this.json
+}
+
+
+###################################################
 # Object Ownership for S3 Bucket
 ###################################################
 

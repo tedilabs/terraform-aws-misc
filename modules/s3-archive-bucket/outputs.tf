@@ -47,6 +47,24 @@ output "versioning" {
   }
 }
 
+output "lifecycle_rules" {
+  description = "The lifecycle configuration for the bucket."
+  value = {
+    for rule in aws_s3_bucket_lifecycle_configuration.this.rule :
+    rule.id => {
+      id      = rule.id
+      enabled = rule.status == "Enabled"
+
+      filter = {
+        prefix          = try(local.lifecycle_rules[rule.id].prefix, null)
+        tags            = try(local.lifecycle_rules[rule.id].tags, {})
+        min_object_size = try(local.lifecycle_rules[rule.id].min_object_size, null)
+        max_object_size = try(local.lifecycle_rules[rule.id].max_object_size, null)
+      }
+    }
+  }
+}
+
 output "server_side_encryption" {
   description = "The configuration for the S3 bucket server-side encryption."
   value = {
