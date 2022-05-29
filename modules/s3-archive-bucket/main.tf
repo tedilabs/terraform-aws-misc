@@ -14,32 +14,6 @@ locals {
   } : {}
 }
 
-data "aws_caller_identity" "this" {}
-data "aws_canonical_user_id" "this" {}
-
-locals {
-  cloudfront_canonical_user_id = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
-
-  default_grants = [
-    {
-      type        = "CanonicalUser"
-      id          = data.aws_canonical_user_id.this.id
-      permissions = ["FULL_CONTROL"]
-    }
-  ]
-  cloudfront_grant = {
-    type        = "CanonicalUser"
-    id          = local.cloudfront_canonical_user_id
-    permissions = ["FULL_CONTROL"]
-  }
-
-  grants = concat(
-    local.default_grants,
-    var.delivery_cloudfront_enabled ? [local.cloudfront_grant] : [],
-    var.grants
-  )
-}
-
 
 ###################################################
 # S3 Bucket for archive
@@ -49,24 +23,6 @@ locals {
 resource "aws_s3_bucket" "this" {
   bucket        = var.name
   force_destroy = var.force_destroy
-
-  acceleration_status = var.transfer_acceleration_enabled ? "Enabled" : "Suspended"
-
-  versioning {
-    enabled    = var.versioning_enabled
-    mfa_delete = var.mfa_delete_enabled
-  }
-
-  dynamic "grant" {
-    for_each = length(local.grants) > 1 ? local.grants : []
-
-    content {
-      type        = try(grant.value.type, null)
-      id          = try(grant.value.id, null)
-      uri         = try(grant.value.uri, null)
-      permissions = try(grant.value.permissions, [])
-    }
-  }
 
   dynamic "lifecycle_rule" {
     for_each = var.lifecycle_rules
@@ -113,23 +69,6 @@ resource "aws_s3_bucket" "this" {
     }
   }
 
-  dynamic "logging" {
-    for_each = var.logging_s3_bucket != null ? ["go"] : []
-
-    content {
-      target_bucket = var.logging_s3_bucket
-      target_prefix = try(var.logging_s3_key_prefix, null)
-    }
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-
   tags = merge(
     {
       "Name" = local.metadata.name
@@ -137,6 +76,31 @@ resource "aws_s3_bucket" "this" {
     local.module_tags,
     var.tags,
   )
+}
+
+
+###################################################
+# Server Side Encryption for S3 Bucket
+###################################################
+
+locals {
+  sse_algorithm = {
+    "AES256"  = "AES256"
+    "AWS_KMS" = "aws:kms"
+  }
+}
+
+# TODO: `expected_bucket_owner`
+# TODO: `bucket_key_enabled`
+# TODO: `rule.apply_server_side_encryption_by_default.kms_master_key_id`
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket = aws_s3_bucket.this.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = local.sse_algorithm["AES256"]
+    }
+  }
 }
 
 
@@ -156,43 +120,4 @@ data "aws_iam_policy_document" "this" {
 resource "aws_s3_bucket_policy" "this" {
   bucket = aws_s3_bucket.this.id
   policy = data.aws_iam_policy_document.this.json
-}
-
-
-###################################################
-# Object Ownership for S3 Bucket
-###################################################
-
-resource "aws_s3_bucket_ownership_controls" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    object_ownership = var.object_ownership
-  }
-}
-
-
-###################################################
-# Public Access Block for S3 Bucket
-###################################################
-
-resource "aws_s3_bucket_public_access_block" "this" {
-  count = var.public_access_block_enabled ? 1 : 0
-
-  bucket = aws_s3_bucket.this.id
-
-  # Block new public ACLs and uploading public objects
-  block_public_acls = true
-  # Retroactively remove public access granted through public ACLs
-  ignore_public_acls = true
-  # Block new public bucket policies
-  block_public_policy = true
-  # Retroactivley block public and cross-account access if bucket has public policies
-  restrict_public_buckets = true
-
-  # To avoid OperationAborted: A conflicting conditional operation is currently in progress
-  depends_on = [
-    aws_s3_bucket.this,
-    aws_s3_bucket_policy.this,
-  ]
 }

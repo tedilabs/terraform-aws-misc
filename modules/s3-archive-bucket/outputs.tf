@@ -32,32 +32,54 @@ output "regional_domain_name" {
   value       = aws_s3_bucket.this.bucket_regional_domain_name
 }
 
-output "transfer_acceleration_enabled" {
-  description = "Whether S3 Transfer Acceleration is enabled."
-  value       = var.transfer_acceleration_enabled
+output "transfer_acceleration" {
+  description = "The configuration for the S3 Transfer Acceleration of the bucket."
+  value = {
+    enabled = var.transfer_acceleration_enabled
+  }
 }
 
 output "versioning" {
   description = "The versioning configuration for the bucket."
   value = {
-    enabled            = var.versioning_enabled
-    mfa_delete_enabled = var.mfa_delete_enabled
+    status       = var.versioning_status
+    mfa_deletion = var.versioning_mfa_deletion
   }
 }
 
-output "object_ownership" {
-  description = "The ownership of objects written to the bucket from other AWS accounts and granted using access control lists(ACLs)."
-  value       = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership
+output "server_side_encryption" {
+  description = "The configuration for the S3 bucket server-side encryption."
+  value = {
+    enabled   = true
+    algorithm = "AES256"
+  }
 }
 
-output "public_access_block_enabled" {
-  description = "Whether S3 bucket-level Public Access Block is enabled."
-  value       = var.public_access_block_enabled
+output "request_payment" {
+  description = "The configuration for the S3 bucket request payment."
+  value = {
+    payer = aws_s3_bucket_request_payment_configuration.this.payer
+  }
+}
+
+output "access_control" {
+  description = "The configuration for the S3 bucket access control."
+  value = {
+    object_ownership = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership
+    acl = {
+      enabled = aws_s3_bucket_ownership_controls.this.rule[0].object_ownership != "BucketOwnerEnforced"
+      grants  = local.grants
+    }
+    public_access = {
+      enabled = var.public_access_enabled
+    }
+  }
 }
 
 output "logging" {
-  description = "The logging configuration for access to the bucket."
+  description = "The logging configuration for the bucket."
   value = {
+    enabled = var.logging_enabled
     s3 = {
       bucket     = var.logging_s3_bucket
       key_prefix = var.logging_s3_key_prefix
