@@ -35,6 +35,8 @@ resource "aws_s3_bucket_versioning" "this" {
 
 # TODO: `expected_bucket_owner`
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
+  count = length(var.lifecycle_rules) > 0 ? 1 : 0
+
   bucket = aws_s3_bucket.this.bucket
 
   dynamic "rule" {

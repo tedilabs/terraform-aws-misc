@@ -50,7 +50,7 @@ output "versioning" {
 output "lifecycle_rules" {
   description = "The lifecycle configuration for the bucket."
   value = {
-    for rule in aws_s3_bucket_lifecycle_configuration.this.rule :
+    for rule in try(aws_s3_bucket_lifecycle_configuration.this[0].rule, []) :
     rule.id => {
       id      = rule.id
       enabled = rule.status == "Enabled"
