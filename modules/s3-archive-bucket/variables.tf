@@ -39,11 +39,7 @@ variable "versioning_mfa_deletion" {
     enabled = bool
     device  = string
   })
-  default = {
-    enabled = false
-    device  = null
-  }
-  nullable = false
+  default = null
 }
 
 variable "grants" {
