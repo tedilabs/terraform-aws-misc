@@ -42,6 +42,12 @@ variable "versioning_mfa_deletion" {
   default = null
 }
 
+variable "policy" {
+  description = "(Optional) A valid policy JSON document. Although this is a bucket policy, not an IAM policy, the `aws_iam_policy_document` data source may be used, so long as it specifies a principal. Bucket policies are limited to 20 KB in size."
+  type        = string
+  default     = null
+}
+
 variable "grants" {
   description = "(Optional) A list of the ACL policy grant. Conflicts with acl. Valid values for `grant.type` are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported. Valid values for `grant.permission` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`."
   type        = list(any)

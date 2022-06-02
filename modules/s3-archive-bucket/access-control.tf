@@ -36,6 +36,7 @@ data "aws_iam_policy_document" "this" {
     var.delivery_config_enabled ? [data.aws_iam_policy_document.config.json] : [],
     var.delivery_elb_enabled ? [data.aws_iam_policy_document.elb.json] : [],
   )
+  override_policy_documents = var.policy != null ? [var.policy] : null
 }
 
 resource "aws_s3_bucket_policy" "this" {
