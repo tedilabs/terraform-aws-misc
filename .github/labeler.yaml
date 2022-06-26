@@ -1,9 +1,9 @@
 # Modules
-":floppy_disk: kms-cmk":
-- modules/kms-cmk/**/*
-
 ":floppy_disk: msk-cluster":
 - modules/msk-cluster/**/*
+
+":floppy_disk: resource-group":
+- modules/resource-group/**/*
 
 ":floppy_disk: s3-archive-bucket":
 - modules/s3-archive-bucket/**/*

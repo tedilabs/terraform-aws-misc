@@ -41,11 +41,11 @@
 
 # Modules
 - color: "fbca04"
-  description: "This issue or pull request is related to kms-cmk module."
-  name: ":floppy_disk: kms-cmk"
-- color: "fbca04"
   description: "This issue or pull request is related to msk-cluster module."
   name: ":floppy_disk: msk-cluster"
+- color: "fbca04"
+  description: "This issue or pull request is related to resource-group module."
+  name: ":floppy_disk: resource-group"
 - color: "fbca04"
   description: "This issue or pull request is related to s3-archive-bucket module."
   name: ":floppy_disk: s3-archive-bucket"
