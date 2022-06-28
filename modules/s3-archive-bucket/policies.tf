@@ -35,8 +35,8 @@ locals {
   elb_resources = [
     for prefix in local.elb_key_prefixes :
     prefix != ""
-    ? "${aws_s3_bucket.this.arn}/${prefix}/AWSLogs/*/elasticloadbalancing/*"
-    : "${aws_s3_bucket.this.arn}/AWSLogs/*/elasticloadbalancing/*"
+    ? "${aws_s3_bucket.this.arn}/${prefix}/AWSLogs/*"
+    : "${aws_s3_bucket.this.arn}/AWSLogs/*"
   ]
 }
 
