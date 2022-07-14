@@ -16,37 +16,58 @@ locals {
 
 
 ###################################################
-# MSK Resources
+# Configuration for MSK Cluster
 ###################################################
 
 resource "aws_msk_configuration" "this" {
-  name           = "${var.name}-${md5(var.kafka_config)}"
+  name           = var.name
   description    = "Configuration for ${var.name} Kafka Cluster."
   kafka_versions = [var.kafka_version]
 
-  server_properties = var.kafka_config
+  server_properties = var.kafka_server_properties
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
+
+###################################################
+# MSK Cluster
+###################################################
+
+# TODO: public access cidrs
+# TODO: server_properties with map
 resource "aws_msk_cluster" "this" {
   cluster_name           = var.name
   kafka_version          = var.kafka_version
   number_of_broker_nodes = var.broker_size
 
-  enhanced_monitoring = var.monitoring_cloudwatch_level
-
   broker_node_group_info {
     instance_type   = var.broker_instance_type
-    ebs_volume_size = var.broker_volume_size
     az_distribution = "DEFAULT"
     client_subnets  = var.broker_subnets
     security_groups = concat(
       module.security_group.*.id,
       var.broker_additional_security_groups
     )
+
+    connectivity_info {
+      public_access {
+        type = var.broker_public_access_enabled ? "SERVICE_PROVIDED_EIPS" : "DISABLED"
+      }
+    }
+
+    storage_info {
+      ebs_storage_info {
+        volume_size = var.broker_volume_size
+
+        provisioned_throughput {
+          enabled           = var.broker_volume_provisioned_throughput_enabled
+          volume_throughput = var.broker_volume_provisioned_throughput
+        }
+      }
+    }
   }
 
   configuration_info {
@@ -54,8 +75,29 @@ resource "aws_msk_cluster" "this" {
     revision = aws_msk_configuration.this.latest_revision
   }
 
+
+  ## Auth
+  client_authentication {
+    unauthenticated = var.auth_unauthenticated_access_enabled
+
+    sasl {
+      iam   = var.auth_sasl_iam_enabled
+      scram = var.auth_sasl_scram_enabled
+    }
+
+    dynamic "tls" {
+      for_each = var.auth_tls_enabled ? ["go"] : []
+
+      content {
+        certificate_authority_arns = var.auth_tls_acm_ca_arns
+      }
+    }
+  }
+
+
+  ## Encryption
   encryption_info {
-    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key_arn
+    encryption_at_rest_kms_key_arn = var.encryption_at_rest_kms_key
 
     encryption_in_transit {
       in_cluster    = var.encryption_in_transit_in_cluster_enabled
@@ -63,27 +105,8 @@ resource "aws_msk_cluster" "this" {
     }
   }
 
-  dynamic "client_authentication" {
-    for_each = try(var.auth_sasl_iam_enabled || var.auth_sasl_scram_enabled, false) ? ["go"] : []
 
-    content {
-      sasl {
-        iam   = var.auth_sasl_iam_enabled
-        scram = var.auth_sasl_scram_enabled
-      }
-    }
-  }
-
-  dynamic "client_authentication" {
-    for_each = try(length(var.auth_tls_acm_ca_arns) > 0, false) ? ["go"] : []
-
-    content {
-      tls {
-        certificate_authority_arns = var.auth_tls_acm_ca_arns
-      }
-    }
-  }
-
+  ## Logging
   logging_info {
     broker_logs {
       cloudwatch_logs {
@@ -102,6 +125,10 @@ resource "aws_msk_cluster" "this" {
     }
   }
 
+
+  ## Monitoring
+  enhanced_monitoring = var.monitoring_cloudwatch_level
+
   open_monitoring {
     prometheus {
       jmx_exporter {
@@ -112,6 +139,12 @@ resource "aws_msk_cluster" "this" {
         enabled_in_broker = var.monitoring_prometheus_node_exporter_enabled
       }
     }
+  }
+
+  timeouts {
+    create = var.timeouts.create
+    update = var.timeouts.update
+    delete = var.timeouts.delete
   }
 
   tags = merge(
