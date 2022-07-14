@@ -13,7 +13,7 @@ locals {
 
 module "security_group" {
   source  = "tedilabs/network/aws//modules/security-group"
-  version = "0.24.0"
+  version = "0.26.0"
 
   count = length(var.broker_allowed_ingress_cidrs) > 0 ? 1 : 0
 
@@ -55,6 +55,33 @@ module "security_group" {
       protocol    = "tcp"
       from_port   = 9098
       to_port     = 9098
+
+      cidr_blocks = var.broker_allowed_ingress_cidrs
+    },
+    {
+      id          = "broker-public-tls/cidrs"
+      description = "Allow CIDRs to communicate with Kafka brokers in tls (public)."
+      protocol    = "tcp"
+      from_port   = 9194
+      to_port     = 9194
+
+      cidr_blocks = var.broker_allowed_ingress_cidrs
+    },
+    {
+      id          = "broker-public-sasl-scram/cidrs"
+      description = "Allow CIDRs to communicate with Kafka brokers in SASL SCRAM (public)."
+      protocol    = "tcp"
+      from_port   = 9196
+      to_port     = 9196
+
+      cidr_blocks = var.broker_allowed_ingress_cidrs
+    },
+    {
+      id          = "broker-public-sasl-iam/cidrs"
+      description = "Allow CIDRs to communicate with Kafka brokers in SASL IAM (public)."
+      protocol    = "tcp"
+      from_port   = 9198
+      to_port     = 9198
 
       cidr_blocks = var.broker_allowed_ingress_cidrs
     },
