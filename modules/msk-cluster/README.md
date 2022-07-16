@@ -4,8 +4,10 @@ This module creates following resources.
 
 - `aws_msk_cluster`
 - `aws_msk_configuration`
+- `aws_msk_scram_secret_association` (optional)
 - `aws_security_group` (optional)
 - `aws_security_group_rule` (optional)
+- `aws_secretsmanager_secret` (optional)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -14,17 +16,20 @@ This module creates following resources.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.22 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.3 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 4.22.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.3.2 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_secret"></a> [secret](#module\_secret) | tedilabs/secret/aws//modules/secrets-manager-secret | ~> 0.2.0 |
 | <a name="module_security_group"></a> [security\_group](#module\_security\_group) | tedilabs/network/aws//modules/security-group | 0.26.0 |
 
 ## Resources
@@ -33,7 +38,9 @@ This module creates following resources.
 |------|------|
 | [aws_msk_cluster.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_cluster) | resource |
 | [aws_msk_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_configuration) | resource |
+| [aws_msk_scram_secret_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_scram_secret_association) | resource |
 | [aws_resourcegroups_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/resourcegroups_group) | resource |
+| [random_password.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [aws_msk_broker_nodes.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/msk_broker_nodes) | data source |
 | [aws_subnet.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
 
@@ -46,6 +53,8 @@ This module creates following resources.
 | <a name="input_name"></a> [name](#input\_name) | (Required) Name of the MSK cluster. | `string` | n/a | yes |
 | <a name="input_auth_sasl_iam_enabled"></a> [auth\_sasl\_iam\_enabled](#input\_auth\_sasl\_iam\_enabled) | (Optional) Enables IAM client authentication. | `bool` | `false` | no |
 | <a name="input_auth_sasl_scram_enabled"></a> [auth\_sasl\_scram\_enabled](#input\_auth\_sasl\_scram\_enabled) | (Optional) Enables SCRAM client authentication via AWS Secrets Manager. | `bool` | `false` | no |
+| <a name="input_auth_sasl_scram_kms_key"></a> [auth\_sasl\_scram\_kms\_key](#input\_auth\_sasl\_scram\_kms\_key) | (Optional) The ARN of a KMS key to encrypt AWS SeecretsManager Secret resources for storing SASL/SCRAM authentication data. Only required when the MSK cluster has SASL/SCRAM authentication enabled. The Username/Password Authentication based on SASL/SCRAM needs to create a Secret resource in AWS SecretsManager with a custom AWS KMS Key. A secret created with the default AWS KMS key cannot be used with an Amazon MSK cluster. | `string` | `null` | no |
+| <a name="input_auth_sasl_scram_users"></a> [auth\_sasl\_scram\_users](#input\_auth\_sasl\_scram\_users) | (Optional) A list of usernames to be allowed for SASL/SCRAM authentication to the MSK cluster. The password for each username is randomly generated and stored in AWS SecretsManager secret. | `set(string)` | `[]` | no |
 | <a name="input_auth_tls_acm_ca_arns"></a> [auth\_tls\_acm\_ca\_arns](#input\_auth\_tls\_acm\_ca\_arns) | (Optional) List of ACM Certificate Authority Amazon Resource Names (ARNs). | `list(string)` | `[]` | no |
 | <a name="input_auth_tls_enabled"></a> [auth\_tls\_enabled](#input\_auth\_tls\_enabled) | (Optional) Enables TLS client authentication. | `bool` | `false` | no |
 | <a name="input_auth_unauthenticated_access_enabled"></a> [auth\_unauthenticated\_access\_enabled](#input\_auth\_unauthenticated\_access\_enabled) | (Optional) Enables unauthenticated access. Defaults to `true`. | `bool` | `true` | no |
@@ -59,7 +68,7 @@ This module creates following resources.
 | <a name="input_encryption_at_rest_kms_key"></a> [encryption\_at\_rest\_kms\_key](#input\_encryption\_at\_rest\_kms\_key) | (Optional) Specify a KMS key short ID or ARN (it will always output an ARN) to use for encrypting your data at rest. If no key is specified, an AWS managed KMS ('aws/msk' managed service) key will be used for encrypting the data at rest. | `string` | `""` | no |
 | <a name="input_encryption_in_transit_client_mode"></a> [encryption\_in\_transit\_client\_mode](#input\_encryption\_in\_transit\_client\_mode) | (Optional) Encryption setting for data in transit between clients and brokers. `TLS`, `TLS_PLAINTEXT`, `PLAINTEXT` are available. | `string` | `"TLS_PLAINTEXT"` | no |
 | <a name="input_encryption_in_transit_in_cluster_enabled"></a> [encryption\_in\_transit\_in\_cluster\_enabled](#input\_encryption\_in\_transit\_in\_cluster\_enabled) | (Optional) Whether data communication among broker nodes is encrypted. | `bool` | `true` | no |
-| <a name="input_kafka_server_properties"></a> [kafka\_server\_properties](#input\_kafka\_server\_properties) | (Optional) Contents of the `server.properties` file for configuration of Kafka. | `string` | `""` | no |
+| <a name="input_kafka_server_properties"></a> [kafka\_server\_properties](#input\_kafka\_server\_properties) | (Optional) Contents of the `server.properties` file for configuration of Kafka. | `map(string)` | `{}` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | (Optional) Kafka version to use for the MSK cluster. | `string` | `"2.8.0"` | no |
 | <a name="input_logging_cloudwatch_enabled"></a> [logging\_cloudwatch\_enabled](#input\_logging\_cloudwatch\_enabled) | (Optional) Indicates whether you want to enable or disable streaming broker logs to Cloudwatch Logs. | `bool` | `false` | no |
 | <a name="input_logging_cloudwatch_log_group"></a> [logging\_cloudwatch\_log\_group](#input\_logging\_cloudwatch\_log\_group) | (Optional) The name of log group on CloudWatch Logs to deliver logs to. | `string` | `""` | no |

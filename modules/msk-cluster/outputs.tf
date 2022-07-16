@@ -75,8 +75,14 @@ output "auth" {
       enabled = aws_msk_cluster.this.client_authentication.0.unauthenticated
     }
     sasl = {
-      iam_enabled   = aws_msk_cluster.this.client_authentication.0.sasl.0.iam
-      scram_enabled = aws_msk_cluster.this.client_authentication.0.sasl.0.scram
+      iam = {
+        enabled = aws_msk_cluster.this.client_authentication.0.sasl.0.iam
+      }
+      scram = {
+        enabled = aws_msk_cluster.this.client_authentication.0.sasl.0.scram
+        kms_key = var.auth_sasl_scram_kms_key
+        users   = var.auth_sasl_scram_users
+      }
     }
     tls = {
       enabled     = var.auth_tls_enabled
