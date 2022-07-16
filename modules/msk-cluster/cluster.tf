@@ -19,12 +19,20 @@ locals {
 # Configuration for MSK Cluster
 ###################################################
 
+locals {
+  server_properties = <<EOT
+%{for k, v in var.kafka_server_properties~}
+${k} = ${v}
+%{endfor~}
+EOT
+}
+
 resource "aws_msk_configuration" "this" {
   name           = var.name
   description    = "Configuration for ${var.name} Kafka Cluster."
   kafka_versions = [var.kafka_version]
 
-  server_properties = var.kafka_server_properties
+  server_properties = local.server_properties
 
   lifecycle {
     create_before_destroy = true
@@ -37,7 +45,6 @@ resource "aws_msk_configuration" "this" {
 ###################################################
 
 # TODO: public access cidrs
-# TODO: server_properties with map
 resource "aws_msk_cluster" "this" {
   cluster_name           = var.name
   kafka_version          = var.kafka_version

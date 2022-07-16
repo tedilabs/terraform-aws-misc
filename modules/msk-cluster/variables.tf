@@ -12,8 +12,9 @@ variable "kafka_version" {
 
 variable "kafka_server_properties" {
   description = "(Optional) Contents of the `server.properties` file for configuration of Kafka."
-  type        = string
-  default     = ""
+  type        = map(string)
+  default     = {}
+  nullable    = false
 }
 
 variable "broker_size" {
@@ -98,6 +99,19 @@ variable "auth_sasl_scram_enabled" {
   description = "(Optional) Enables SCRAM client authentication via AWS Secrets Manager."
   type        = bool
   default     = false
+  nullable    = false
+}
+
+variable "auth_sasl_scram_kms_key" {
+  description = "(Optional) The ARN of a KMS key to encrypt AWS SeecretsManager Secret resources for storing SASL/SCRAM authentication data. Only required when the MSK cluster has SASL/SCRAM authentication enabled. The Username/Password Authentication based on SASL/SCRAM needs to create a Secret resource in AWS SecretsManager with a custom AWS KMS Key. A secret created with the default AWS KMS key cannot be used with an Amazon MSK cluster."
+  type        = string
+  default     = null
+}
+
+variable "auth_sasl_scram_users" {
+  description = "(Optional) A list of usernames to be allowed for SASL/SCRAM authentication to the MSK cluster. The password for each username is randomly generated and stored in AWS SecretsManager secret."
+  type        = set(string)
+  default     = []
   nullable    = false
 }
 
