@@ -61,8 +61,8 @@ output "broker" {
     volume = {
       size = aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.volume_size
       provisioned_throughput = {
-        enabled    = aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.provisioned_throughput.0.enabled
-        throughput = aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.provisioned_throughput.0.volume_throughput
+        enabled    = try(aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.provisioned_throughput.0.enabled, false)
+        throughput = try(aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.provisioned_throughput.0.volume_throughput, 0)
       }
     }
   }
