@@ -69,9 +69,13 @@ resource "aws_msk_cluster" "this" {
       ebs_storage_info {
         volume_size = var.broker_volume_size
 
-        provisioned_throughput {
-          enabled           = var.broker_volume_provisioned_throughput_enabled
-          volume_throughput = var.broker_volume_provisioned_throughput
+        dynamic "provisioned_throughput" {
+          for_each = var.broker_volume_provisioned_throughput_enabled ? ["go"] : []
+
+          content {
+            enabled           = true
+            volume_throughput = var.broker_volume_provisioned_throughput
+          }
         }
       }
     }
