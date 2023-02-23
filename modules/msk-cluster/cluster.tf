@@ -55,7 +55,7 @@ resource "aws_msk_cluster" "this" {
     az_distribution = "DEFAULT"
     client_subnets  = var.broker_subnets
     security_groups = concat(
-      module.security_group.*.id,
+      module.security_group[*].id,
       var.broker_additional_security_groups
     )
 
