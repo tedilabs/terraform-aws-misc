@@ -30,7 +30,7 @@ output "kafka_config" {
 
 output "broker_security_group_id" {
   description = "The id of security group that were created for the MSK cluster."
-  value       = try(module.security_group.*.id[0], null)
+  value       = try(module.security_group[*].id[0], null)
 }
 
 output "broker_nodes" {
@@ -51,18 +51,18 @@ output "broker" {
   EOF
   value = {
     size          = aws_msk_cluster.this.number_of_broker_nodes
-    instance_type = aws_msk_cluster.this.broker_node_group_info.0.instance_type
+    instance_type = aws_msk_cluster.this.broker_node_group_info[0].instance_type
 
-    subnets                   = aws_msk_cluster.this.broker_node_group_info.0.client_subnets
+    subnets                   = aws_msk_cluster.this.broker_node_group_info[0].client_subnets
     public_access_enabled     = var.broker_public_access_enabled
-    security_groups           = aws_msk_cluster.this.broker_node_group_info.0.security_groups
-    default_security_group_id = try(module.security_group.*.id[0], null)
+    security_groups           = aws_msk_cluster.this.broker_node_group_info[0].security_groups
+    default_security_group_id = try(module.security_group[*].id[0], null)
 
     volume = {
-      size = aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.volume_size
+      size = aws_msk_cluster.this.broker_node_group_info[0].storage_info[0].ebs_storage_info[0].volume_size
       provisioned_throughput = {
-        enabled    = try(aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.provisioned_throughput.0.enabled, false)
-        throughput = try(aws_msk_cluster.this.broker_node_group_info.0.storage_info.0.ebs_storage_info.0.provisioned_throughput.0.volume_throughput, null)
+        enabled    = try(aws_msk_cluster.this.broker_node_group_info[0].storage_info[0].ebs_storage_info[0].provisioned_throughput[0].enabled, false)
+        throughput = try(aws_msk_cluster.this.broker_node_group_info[0].storage_info[0].ebs_storage_info[0].provisioned_throughput[0].volume_throughput, null)
       }
     }
   }
@@ -72,21 +72,21 @@ output "auth" {
   description = "A configuration for authentication of the Kafka cluster."
   value = {
     unauthenticated_access = {
-      enabled = aws_msk_cluster.this.client_authentication.0.unauthenticated
+      enabled = aws_msk_cluster.this.client_authentication[0].unauthenticated
     }
     sasl = {
       iam = {
-        enabled = aws_msk_cluster.this.client_authentication.0.sasl.0.iam
+        enabled = aws_msk_cluster.this.client_authentication[0].sasl[0].iam
       }
       scram = {
-        enabled = aws_msk_cluster.this.client_authentication.0.sasl.0.scram
+        enabled = aws_msk_cluster.this.client_authentication[0].sasl[0].scram
         kms_key = var.auth_sasl_scram_kms_key
         users   = var.auth_sasl_scram_users
       }
     }
     tls = {
       enabled     = var.auth_tls_enabled
-      acm_ca_arns = try(aws_msk_cluster.this.client_authentication.0.tls.0.certificate_authority_arns, [])
+      acm_ca_arns = try(aws_msk_cluster.this.client_authentication[0].tls[0].certificate_authority_arns, [])
     }
   }
 }
@@ -99,11 +99,11 @@ output "encryption" {
   EOF
   value = {
     at_rest = {
-      kms_key = aws_msk_cluster.this.encryption_info.0.encryption_at_rest_kms_key_arn
+      kms_key = aws_msk_cluster.this.encryption_info[0].encryption_at_rest_kms_key_arn
     }
     in_transit = {
-      in_cluster_enabled = aws_msk_cluster.this.encryption_info.0.encryption_in_transit.0.in_cluster
-      client_mode        = aws_msk_cluster.this.encryption_info.0.encryption_in_transit.0.client_broker
+      in_cluster_enabled = aws_msk_cluster.this.encryption_info[0].encryption_in_transit[0].in_cluster
+      client_mode        = aws_msk_cluster.this.encryption_info[0].encryption_in_transit[0].client_broker
     }
   }
 }
@@ -117,17 +117,17 @@ output "logging" {
   EOF
   value = {
     cloudwatch = {
-      enabled   = aws_msk_cluster.this.logging_info.0.broker_logs.0.cloudwatch_logs.0.enabled
-      log_group = aws_msk_cluster.this.logging_info.0.broker_logs.0.cloudwatch_logs.0.log_group
+      enabled   = aws_msk_cluster.this.logging_info[0].broker_logs[0].cloudwatch_logs[0].enabled
+      log_group = aws_msk_cluster.this.logging_info[0].broker_logs[0].cloudwatch_logs[0].log_group
     }
     firehose = {
-      enabled         = aws_msk_cluster.this.logging_info.0.broker_logs.0.firehose.0.enabled
-      delivery_stream = aws_msk_cluster.this.logging_info.0.broker_logs.0.firehose.0.delivery_stream
+      enabled         = aws_msk_cluster.this.logging_info[0].broker_logs[0].firehose[0].enabled
+      delivery_stream = aws_msk_cluster.this.logging_info[0].broker_logs[0].firehose[0].delivery_stream
     }
     s3 = {
-      enabled = aws_msk_cluster.this.logging_info.0.broker_logs.0.s3.0.enabled
-      bucket  = aws_msk_cluster.this.logging_info.0.broker_logs.0.s3.0.bucket
-      prefix  = aws_msk_cluster.this.logging_info.0.broker_logs.0.s3.0.prefix
+      enabled = aws_msk_cluster.this.logging_info[0].broker_logs[0].s3[0].enabled
+      bucket  = aws_msk_cluster.this.logging_info[0].broker_logs[0].s3[0].bucket
+      prefix  = aws_msk_cluster.this.logging_info[0].broker_logs[0].s3[0].prefix
     }
   }
 }
@@ -143,8 +143,8 @@ output "monitoring" {
       level = aws_msk_cluster.this.enhanced_monitoring
     }
     prometheus = {
-      jmx_exporter_enabled  = aws_msk_cluster.this.open_monitoring.0.prometheus.0.jmx_exporter.0.enabled_in_broker
-      node_exporter_enabled = aws_msk_cluster.this.open_monitoring.0.prometheus.0.node_exporter.0.enabled_in_broker
+      jmx_exporter_enabled  = aws_msk_cluster.this.open_monitoring[0].prometheus[0].jmx_exporter[0].enabled_in_broker
+      node_exporter_enabled = aws_msk_cluster.this.open_monitoring[0].prometheus[0].node_exporter[0].enabled_in_broker
     }
   }
 }
