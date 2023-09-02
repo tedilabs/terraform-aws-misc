@@ -21,14 +21,14 @@ locals {
 
 locals {
   filters = [
-    for key, value in try(var.query.resource_tags, {}) : {
+    for key, value in var.query.resource_tags : {
       "Key"    = key
       "Values" = flatten([value])
     }
   ]
   query = <<-JSON
   {
-    "ResourceTypeFilters": ${jsonencode(try(var.query.resource_types, ["AWS::AllSupported"]))},
+    "ResourceTypeFilters": ${jsonencode(var.query.resource_types)},
     "TagFilters": ${jsonencode(local.filters)}
   }
   JSON
