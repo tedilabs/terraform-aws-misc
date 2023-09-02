@@ -15,10 +15,10 @@ output "description" {
 
 output "resource_types" {
   description = "The resource types used by the resource group to query resources."
-  value       = try(var.query.resource_types, ["AWS::AllSupported"])
+  value       = var.query.resource_types
 }
 
 output "resource_tags" {
   description = "The resource tags used by the resource group to query resources."
-  value       = try(var.query.resource_tags, {})
+  value       = var.query.resource_tags
 }
