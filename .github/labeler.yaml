@@ -1,9 +1,15 @@
 # Modules
 ":floppy_disk: resource-group":
-- modules/resource-group/**/*
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/resource-group/**/*
 
 ":floppy_disk: s3-archive-bucket":
-- modules/s3-archive-bucket/**/*
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/s3-archive-bucket/**/*
 
 ":floppy_disk: sqs-aws-event-queue":
-- modules/sqs-aws-event-queue/**/*
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/sqs-aws-event-queue/**/*
