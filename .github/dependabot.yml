@@ -7,8 +7,6 @@ updates:
 
 - package-ecosystem: terraform
   directories:
-  - /modules/resource-group
-  - /modules/s3-archive-bucket
-  - /modules/sqs-aws-event-queue
+  - /modules/*
   schedule:
     interval: weekly
