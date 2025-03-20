@@ -5,7 +5,7 @@ This module creates following resources.
 - `aws_sqs_queue`
 - `aws_sqs_queue_policy`
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -58,4 +58,4 @@ This module creates following resources.
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the SQS queue. |
 | <a name="output_id"></a> [id](#output\_id) | The URL for the created Amazon SQS queue. |
 | <a name="output_name"></a> [name](#output\_name) | The name of the SQS queue. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

@@ -4,7 +4,7 @@ This module creates following resources.
 
 - `aws_resourcegroups_group`
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -47,4 +47,4 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | The name of the resource group. |
 | <a name="output_resource_tags"></a> [resource\_tags](#output\_resource\_tags) | The resource tags used by the resource group to query resources. |
 | <a name="output_resource_types"></a> [resource\_types](#output\_resource\_types) | The resource types used by the resource group to query resources. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

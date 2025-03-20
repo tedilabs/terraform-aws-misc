@@ -13,7 +13,7 @@ This module creates following resources.
 - `aws_s3_bucket_server_side_encryption_configuration`
 - `aws_s3_bucket_versioning`
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -106,4 +106,4 @@ This module creates following resources.
 | <a name="output_server_side_encryption"></a> [server\_side\_encryption](#output\_server\_side\_encryption) | The configuration for the S3 bucket server-side encryption. |
 | <a name="output_transfer_acceleration"></a> [transfer\_acceleration](#output\_transfer\_acceleration) | The configuration for the S3 Transfer Acceleration of the bucket. |
 | <a name="output_versioning"></a> [versioning](#output\_versioning) | The versioning configuration for the bucket. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
