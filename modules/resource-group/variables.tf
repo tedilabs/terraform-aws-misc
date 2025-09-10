@@ -1,3 +1,10 @@
+variable "region" {
+  description = "(Optional) The region in which to create the resource group. If not provided, the resource group will be created in the provider's configured region."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "name" {
   description = "(Required) A name to identify the resource group. A resource group name can have a maximum of 127 characters, including letters, numbers, hyphens, dots, and underscores. The name cannot start with `AWS` or `aws`."
   type        = string
