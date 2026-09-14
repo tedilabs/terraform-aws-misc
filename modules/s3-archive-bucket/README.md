@@ -17,26 +17,26 @@ This module creates following resources.
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.16 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.19.0 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.16 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | tedilabs/misc/aws//modules/resource-group | ~> 0.10.0 |
+| ---- | ------ | ------- |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | tedilabs/misc/aws//modules/resource-group | ~> 0.12.0 |
 
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_accelerate_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_accelerate_configuration) | resource |
 | [aws_s3_bucket_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
@@ -60,7 +60,7 @@ This module creates following resources.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_name"></a> [name](#input\_name) | (Required) Desired name for the S3 bucket. | `string` | n/a | yes |
 | <a name="input_delivery_cloudfront_enabled"></a> [delivery\_cloudfront\_enabled](#input\_delivery\_cloudfront\_enabled) | (Optional) Allow CloudFront service to export logs to bucket. | `bool` | `false` | no |
 | <a name="input_delivery_cloudtrail_enabled"></a> [delivery\_cloudtrail\_enabled](#input\_delivery\_cloudtrail\_enabled) | (Optional) Allow CloudTrail service to export logs to bucket. | `bool` | `false` | no |
@@ -79,19 +79,17 @@ This module creates following resources.
 | <a name="input_object_ownership"></a> [object\_ownership](#input\_object\_ownership) | (Optional) Control ownership of objects written to this bucket from other AWS accounts and granted using access control lists (ACLs). Object ownership determines who can specify access to objects. Valid values: `BucketOwnerPreferred`, `BucketOwnerEnforced` or `ObjectWriter`. | `string` | `"BucketOwnerPreferred"` | no |
 | <a name="input_policy"></a> [policy](#input\_policy) | (Optional) A valid policy JSON document. Although this is a bucket policy, not an IAM policy, the `aws_iam_policy_document` data source may be used, so long as it specifies a principal. Bucket policies are limited to 20 KB in size. | `string` | `null` | no |
 | <a name="input_public_access_enabled"></a> [public\_access\_enabled](#input\_public\_access\_enabled) | (Optional) Whether to enable S3 bucket-level Public Access Block configuration. Block the public access to S3 bucket if the value is `false`. | `bool` | `false` | no |
-| <a name="input_resource_group_description"></a> [resource\_group\_description](#input\_resource\_group\_description) | (Optional) The description of Resource Group. | `string` | `"Managed by Terraform."` | no |
-| <a name="input_resource_group_enabled"></a> [resource\_group\_enabled](#input\_resource\_group\_enabled) | (Optional) Whether to create Resource Group to find and group AWS resources which are created by this module. | `bool` | `true` | no |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | (Optional) The name of Resource Group. A Resource Group name can have a maximum of 127 characters, including letters, numbers, hyphens, dots, and underscores. The name cannot start with `AWS` or `aws`. | `string` | `""` | no |
+| <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | (Optional) A configurations of Resource Group for this module. `resource_group` as defined below.<br/>    (Optional) `enabled` - Whether to create Resource Group to find and group AWS resources which are created by this module. Defaults to `true`.<br/>    (Optional) `name` - The name of Resource Group. A Resource Group name can have a maximum of 127 characters, including letters, numbers, hyphens, dots, and underscores. The name cannot start with `AWS` or `aws`. If not provided, a name will be generated using the module name and instance name.<br/>    (Optional) `description` - The description of Resource Group. Defaults to `Managed by Terraform.`. | <pre>object({<br/>    enabled     = optional(bool, true)<br/>    name        = optional(string, "")<br/>    description = optional(string, "Managed by Terraform.")<br/>  })</pre> | `{}` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A map of tags to add to all resources. | `map(string)` | `{}` | no |
 | <a name="input_tls_required"></a> [tls\_required](#input\_tls\_required) | (Optional) Deny any access to the S3 bucket that is not encrypted in-transit if true. | `bool` | `true` | no |
 | <a name="input_transfer_acceleration_enabled"></a> [transfer\_acceleration\_enabled](#input\_transfer\_acceleration\_enabled) | (Optional) Whether to use an accelerated endpoint for faster data transfers. | `bool` | `false` | no |
-| <a name="input_versioning_mfa_deletion"></a> [versioning\_mfa\_deletion](#input\_versioning\_mfa\_deletion) | (Optional) A configuration for MFA (Multi-factors Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.<br>    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.<br>    (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | <pre>object({<br>    enabled = bool<br>    device  = string<br>  })</pre> | `null` | no |
+| <a name="input_versioning_mfa_deletion"></a> [versioning\_mfa\_deletion](#input\_versioning\_mfa\_deletion) | (Optional) A configuration for MFA (Multi-factors Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.<br/>    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.<br/>    (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | <pre>object({<br/>    enabled = bool<br/>    device  = string<br/>  })</pre> | `null` | no |
 | <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | (Optional) A desired status of the bucket versioning. Valid values are `ENABLED`, `SUSPENDED`, or `DISABLED`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"DISABLED"` | no |
 
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_access_control"></a> [access\_control](#output\_access\_control) | The configuration for the S3 bucket access control. |
 | <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the bucket. |
 | <a name="output_domain_name"></a> [domain\_name](#output\_domain\_name) | The bucket domain name. Will be of format `bucketname.s3.amazonaws.com`. |
@@ -103,6 +101,7 @@ This module creates following resources.
 | <a name="output_region"></a> [region](#output\_region) | The AWS region this bucket resides in. |
 | <a name="output_regional_domain_name"></a> [regional\_domain\_name](#output\_regional\_domain\_name) | The bucket region-specific domain name. The bucket domain name including the region name. |
 | <a name="output_request_payment"></a> [request\_payment](#output\_request\_payment) | The configuration for the S3 bucket request payment. |
+| <a name="output_resource_group"></a> [resource\_group](#output\_resource\_group) | The resource group created to manage resources in this module. |
 | <a name="output_server_side_encryption"></a> [server\_side\_encryption](#output\_server\_side\_encryption) | The configuration for the S3 bucket server-side encryption. |
 | <a name="output_transfer_acceleration"></a> [transfer\_acceleration](#output\_transfer\_acceleration) | The configuration for the S3 Transfer Acceleration of the bucket. |
 | <a name="output_versioning"></a> [versioning](#output\_versioning) | The versioning configuration for the bucket. |
