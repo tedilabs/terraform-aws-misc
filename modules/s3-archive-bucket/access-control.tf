@@ -88,6 +88,10 @@ resource "aws_s3_bucket_acl" "this" {
       id = data.aws_canonical_user_id.this.id
     }
   }
+
+  depends_on = [
+    aws_s3_bucket_ownership_controls.this,
+  ]
 }
 
 
