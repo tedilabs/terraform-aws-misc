@@ -9,6 +9,11 @@
   - any-glob-to-any-file:
     - modules/s3-archive-bucket/**/*
 
+":floppy_disk: scalable-target":
+- changed-files:
+  - any-glob-to-any-file:
+    - modules/scalable-target/**/*
+
 ":floppy_disk: sqs-aws-event-queue":
 - changed-files:
   - any-glob-to-any-file:
