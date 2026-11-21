@@ -58,6 +58,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
       dynamic "filter" {
         for_each = sum([
           try(rule.value.prefix != null ? 1 : 0, 0),
+          try(rule.value.tags != null ? 2 : 0, 0),
           try(rule.value.min_object_size != null ? 1 : 0, 0),
           try(rule.value.max_object_size != null ? 1 : 0, 0),
         ]) == 1 ? ["go"] : []
