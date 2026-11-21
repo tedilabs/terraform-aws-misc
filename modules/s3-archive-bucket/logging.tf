@@ -10,5 +10,5 @@ resource "aws_s3_bucket_logging" "this" {
   bucket = aws_s3_bucket.this.bucket
 
   target_bucket = var.logging_s3_bucket
-  target_prefix = try(var.logging_s3_key_prefix, null)
+  target_prefix = var.logging_s3_key_prefix != null ? var.logging_s3_key_prefix : ""
 }
