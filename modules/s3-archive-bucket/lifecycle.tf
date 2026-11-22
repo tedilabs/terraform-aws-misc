@@ -37,104 +37,116 @@ resource "aws_s3_bucket_versioning" "this" {
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
   count = length(var.lifecycle_rules) > 0 ? 1 : 0
 
-  bucket = aws_s3_bucket.this.bucket
+  bucket = aws_s3_bucket_versioning.this.bucket
+
+  transition_default_minimum_object_size = var.lifecycle_transition_default_min_object_size_strategy
 
   dynamic "rule" {
     for_each = var.lifecycle_rules
 
     content {
       id     = rule.value.id
-      status = try(rule.value.enabled, true) ? "Enabled" : "Disabled"
+      status = rule.value.enabled ? "Enabled" : "Disabled"
 
       dynamic "abort_incomplete_multipart_upload" {
-        for_each = try([rule.value.days_to_abort_incomplete_multipart_upload], [])
+        for_each = rule.value.abort_incomplete_multipart_upload != null ? [rule.value.abort_incomplete_multipart_upload] : []
 
         content {
-          days_after_initiation = abort_incomplete_multipart_upload.value
+          days_after_initiation = abort_incomplete_multipart_upload.value.days
+        }
+      }
+
+      ## Empty Filter
+      dynamic "filter" {
+        for_each = sum([
+          rule.value.prefix != "" ? 1 : 0,
+          length(rule.value.tags) != 0 ? 1 : 0,
+          rule.value.min_object_size != null ? 1 : 0,
+          rule.value.max_object_size != null ? 1 : 0,
+        ]) == 0 ? ["go"] : []
+
+        content {
+          prefix = rule.value.prefix
         }
       }
 
       ## Single Filter
       dynamic "filter" {
-        for_each = sum([
-          try(rule.value.prefix != null ? 1 : 0, 0),
-          try(rule.value.min_object_size != null ? 1 : 0, 0),
-          try(rule.value.max_object_size != null ? 1 : 0, 0),
+        for_each = length(rule.value.tags) == 0 && sum([
+          rule.value.prefix != "" ? 1 : 0,
+          rule.value.min_object_size != null ? 1 : 0,
+          rule.value.max_object_size != null ? 1 : 0,
         ]) == 1 ? ["go"] : []
 
         content {
-          prefix = try(rule.value.prefix, null)
+          prefix = rule.value.prefix
 
-          object_size_greater_than = try(rule.value.min_object_size, null)
-          object_size_less_than    = try(rule.value.max_object_size, null)
+          object_size_greater_than = rule.value.min_object_size
+          object_size_less_than    = rule.value.max_object_size
         }
       }
 
       ## Multi Filter
       dynamic "filter" {
         for_each = sum([
-          try(rule.value.prefix != null ? 1 : 0, 0),
-          try(rule.value.tags != null ? 2 : 0, 0),
-          try(rule.value.min_object_size != null ? 1 : 0, 0),
-          try(rule.value.max_object_size != null ? 1 : 0, 0),
+          rule.value.prefix != "" ? 1 : 0,
+          length(rule.value.tags) != 0 ? 2 : 0,
+          rule.value.min_object_size != null ? 1 : 0,
+          rule.value.max_object_size != null ? 1 : 0,
         ]) > 1 ? ["go"] : []
 
         content {
           and {
-            prefix = try(rule.value.prefix, null)
-            tags   = try(rule.value.tags, null)
+            prefix = rule.value.prefix
+            tags   = rule.value.tags != {} ? rule.value.tags : null
 
-            object_size_greater_than = try(rule.value.min_object_size, null)
-            object_size_less_than    = try(rule.value.max_object_size, null)
+            object_size_greater_than = rule.value.min_object_size
+            object_size_less_than    = rule.value.max_object_size
           }
         }
       }
 
-      dynamic "expiration" {
-        for_each = try([rule.value.expiration], [])
-
-        content {
-          date = try(expiration.value.date, null)
-          days = try(expiration.value.days, 0)
-
-          expired_object_delete_marker = try(expiration.value.expired_object_delete_marker, false)
-        }
-      }
-
-      dynamic "noncurrent_version_expiration" {
-        for_each = try([rule.value.noncurrent_version_expiration], [])
-
-        content {
-          noncurrent_days           = try(noncurrent_version_expiration.value.days, null)
-          newer_noncurrent_versions = try(noncurrent_version_expiration.value.count, null)
-        }
-      }
-
       dynamic "transition" {
-        for_each = try(rule.value.transitions, [])
+        for_each = rule.value.transitions
 
         content {
-          date = try(transition.value.date, null)
-          days = try(transition.value.days, null)
+          date = transition.value.date
+          days = transition.value.days
 
           storage_class = transition.value.storage_class
         }
       }
 
       dynamic "noncurrent_version_transition" {
-        for_each = try(rule.value.noncurrent_version_transitions, [])
+        for_each = rule.value.noncurrent_version_transitions
 
         content {
-          noncurrent_days           = try(noncurrent_version_transition.value.days, null)
-          newer_noncurrent_versions = try(noncurrent_version_transition.value.count, null)
+          noncurrent_days           = noncurrent_version_transition.value.days
+          newer_noncurrent_versions = noncurrent_version_transition.value.count
 
           storage_class = noncurrent_version_transition.value.storage_class
         }
       }
+
+      dynamic "expiration" {
+        for_each = rule.value.expiration != null ? [rule.value.expiration] : []
+
+        content {
+          date = expiration.value.date
+          days = expiration.value.days
+
+          expired_object_delete_marker = expiration.value.expired_object_delete_marker ? true : null
+        }
+      }
+
+      dynamic "noncurrent_version_expiration" {
+        for_each = rule.value.noncurrent_version_expiration != null ? [rule.value.noncurrent_version_expiration] : []
+
+        content {
+          noncurrent_days           = noncurrent_version_expiration.value.days
+          newer_noncurrent_versions = noncurrent_version_expiration.value.count
+        }
+      }
     }
   }
-
-  depends_on = [
-    aws_s3_bucket_versioning.this,
-  ]
 }

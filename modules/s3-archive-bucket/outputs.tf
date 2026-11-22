@@ -47,19 +47,22 @@ output "versioning" {
   }
 }
 
-output "lifecycle_rules" {
+output "lifecycle" {
   description = "The lifecycle configuration for the bucket."
   value = {
-    for rule in try(aws_s3_bucket_lifecycle_configuration.this[0].rule, []) :
-    rule.id => {
-      id      = rule.id
-      enabled = rule.status == "Enabled"
+    transition_default_min_object_size_strategy = var.lifecycle_transition_default_min_object_size_strategy
+    rules = {
+      for rule in try(aws_s3_bucket_lifecycle_configuration.this[0].rule, []) :
+      rule.id => {
+        id      = rule.id
+        enabled = rule.status == "Enabled"
 
-      filter = {
-        prefix          = try(local.lifecycle_rules[rule.id].prefix, null)
-        tags            = try(local.lifecycle_rules[rule.id].tags, {})
-        min_object_size = try(local.lifecycle_rules[rule.id].min_object_size, null)
-        max_object_size = try(local.lifecycle_rules[rule.id].max_object_size, null)
+        filter = {
+          prefix          = try(local.lifecycle_rules[rule.id].prefix, null)
+          tags            = try(local.lifecycle_rules[rule.id].tags, {})
+          min_object_size = try(local.lifecycle_rules[rule.id].min_object_size, null)
+          max_object_size = try(local.lifecycle_rules[rule.id].max_object_size, null)
+        }
       }
     }
   }
