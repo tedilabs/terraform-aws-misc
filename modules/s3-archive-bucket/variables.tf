@@ -31,7 +31,7 @@ variable "versioning_status" {
 
 variable "versioning_mfa_deletion" {
   description = <<EOF
-  (Optional) A configuration for MFA (Multi-factors Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.
+  (Optional) A configuration for MFA (Multi-Factor Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.
     (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.
     (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device.
   EOF
