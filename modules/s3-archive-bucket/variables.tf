@@ -32,7 +32,7 @@ variable "versioning_status" {
 variable "versioning_mfa_deletion" {
   description = <<EOF
   (Optional) A configuration for MFA (Multi-Factor Authentication) of the bucket versioning on deletion. `versioning_mfa_deletion` block as defined below.
-    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration. Default is `false`.
+    (Required) `enabled` - Whether MFA delete is enabled in the bucket versioning configuration.
     (Required) `device` - The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device.
   EOF
   type = object({
@@ -49,7 +49,7 @@ variable "policy" {
 }
 
 variable "grants" {
-  description = "(Optional) A list of the ACL policy grant. Conflicts with acl. Valid values for `grant.type` are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported. Valid values for `grant.permission` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`."
+  description = "(Optional) A list of the ACL policy grant. Valid values for `grant.type` are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported. Valid values for `grant.permission` are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`."
   type        = list(any)
   default     = []
   nullable    = false
