@@ -76,7 +76,7 @@ variable "object_ownership" {
 }
 
 variable "public_access_enabled" {
-  description = "(Optional) Whether to enable S3 bucket-level Public Access Block configuration. Block the public access to S3 bucket if the value is `false`."
+  description = "(Optional) Whether to allow public access to the S3 bucket. The S3 bucket-level Public Access Block blocks all public access if the value is `false`. Defaults to `false`."
   type        = bool
   default     = false
   nullable    = false
