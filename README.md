@@ -6,6 +6,34 @@
 
 Terraform module which creates resources for misc services on AWS.
 
+- [resource-group](./modules/resource-group)
+- [s3-archive-bucket](./modules/s3-archive-bucket)
+- [scalable-target](./modules/scalable-target)
+- [sqs-aws-event-queue](./modules/sqs-aws-event-queue)
+
+
+## Target AWS Services
+
+Terraform Modules from [this package](https://github.com/tedilabs/terraform-aws-misc) were written to manage the following AWS Services with Terraform.
+
+- **AWS Application Auto Scaling**
+  - Scalable Target
+  - Scaling Policy
+  - Scheduled Action
+- **AWS Resource Groups**
+  - Resource Group
+- **AWS S3 (Simple Storage Service)**
+  - Archive Bucket
+- **AWS SQS (Simple Queue Service)**
+  - AWS Event Queue
+
+
+## Examples
+
+### Application Auto Scaling
+
+- [scalable-target-dynamodb-table](./examples/scalable-target-dynamodb-table)
+
 
 ## Self Promotion
 

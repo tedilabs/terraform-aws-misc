@@ -6,5 +6,8 @@
   description: "This issue or pull request is related to s3-archive-bucket module."
   name: ":floppy_disk: s3-archive-bucket"
 - color: "fbca04"
+  description: "This issue or pull request is related to scalable-target module."
+  name: ":floppy_disk: scalable-target"
+- color: "fbca04"
   description: "This issue or pull request is related to sqs-aws-event-queue module."
   name: ":floppy_disk: sqs-aws-event-queue"
